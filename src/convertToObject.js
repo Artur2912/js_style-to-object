@@ -6,14 +6,26 @@
  * @return {object}
  */
 function convertToObject(sourceString) {
-  // write your code here
   const obj = {};
-  const lines = sourceString.split(';').filter(line => line !== '');
+
+  const lines = sourceString
+    .split(';')
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
 
   for (const line of lines) {
-    const [key, value] = line.split(':');
+    const index = line.indexOf(':');
 
-    obj[key.trim()] = value.trim();
+    if (index === -1) {
+      continue;
+    }
+
+    const key = line.slice(0, index).trim();
+    const value = line.slice(index + 1).trim();
+
+    if (key) {
+      obj[key] = value;
+    }
   }
 
   return obj;
