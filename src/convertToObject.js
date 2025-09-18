@@ -6,29 +6,21 @@
  * @return {object}
  */
 function convertToObject(sourceString) {
-  const obj = {};
-
-  const lines = sourceString
+  return sourceString
     .split(';')
     .map((line) => line.trim())
-    .filter((line) => line.length > 0);
+    .filter((line) => line !== '' && line.includes(':'))
+    .reduce((stylesObject, line) => {
+      const idx = line.indexOf(':');
+      const key = line.slice(0, idx).trim();
+      const value = line.slice(idx + 1).trim();
 
-  for (const line of lines) {
-    const index = line.indexOf(':');
+      if (key && value) {
+        stylesObject[key] = value;
+      }
 
-    if (index === -1) {
-      continue;
-    }
-
-    const key = line.slice(0, index).trim();
-    const value = line.slice(index + 1).trim();
-
-    if (key) {
-      obj[key] = value;
-    }
-  }
-
-  return obj;
+      return stylesObject;
+    }, {});
 }
 
 module.exports = convertToObject;
